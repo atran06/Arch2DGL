@@ -15,13 +15,9 @@ public abstract class Shape {
 
     }
 
-    public void draw() {
+    public abstract void draw();
 
-    }
-
-    public void fill() {
-
-    }
+    public abstract void fill();
 
     public float getX() {
         return x;

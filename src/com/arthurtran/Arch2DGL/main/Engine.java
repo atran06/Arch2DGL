@@ -36,7 +36,6 @@ public interface Engine {
             while (delta >= 1) {
                 render = true;
                 update();
-                Toolkit.getDefaultToolkit().sync();
                 delta--;
             }
 
@@ -53,7 +52,10 @@ public interface Engine {
             if (render) {
                 render();
                 fps++;
+            } else {
+                Thread.yield();
             }
         }
+        GLFW.glfwDestroyWindow(window.getWindow());
     }
 }

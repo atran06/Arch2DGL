@@ -8,6 +8,7 @@ public class Rectangle extends Shape {
         super(x, y, width, height);
     }
 
+    @Override
     public void draw() {
         GL11.glBegin(GL11.GL_LINE_LOOP);
 
@@ -19,6 +20,7 @@ public class Rectangle extends Shape {
         GL11.glEnd();
     }
 
+    @Override
     public void fill() {
         GL11.glBegin(GL11.GL_QUADS);
 

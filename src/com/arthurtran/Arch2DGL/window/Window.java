@@ -13,10 +13,16 @@ public class Window {
 
     private long window;
 
-    private int width;
-    private int height;
+    private double width;
+    private double height;
+    private double scaleWidth;
+    private double scaleHeight;
+
+    private float scale;
+
     private int centered;
     private int vsync;
+    private int fullscreen;
 
     private long fps;
 
@@ -26,7 +32,7 @@ public class Window {
 
     private boolean resizeable = false;
 
-    public Window(int width, int height, String title, int centered, int vsync) {
+    public Window(double width, double height, String title, int centered, int vsync, float scale, int fullscreen) {
         this.width = width;
         this.height = height;
 
@@ -34,6 +40,9 @@ public class Window {
 
         this.centered = centered;
         this.vsync = vsync;
+        this.fullscreen = fullscreen;
+
+        this.scale = scale;
     }
 
     public void init() {
@@ -42,11 +51,22 @@ public class Window {
         if(resizeable) GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, GLFW.GLFW_TRUE);
         else GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, GLFW.GLFW_FALSE);
 
-        window = GLFW.glfwCreateWindow(width, height, title, MemoryUtil.NULL, MemoryUtil.NULL);
-
         videoMode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
-        if(centered == A2D.A2D_CENTERED) GLFW.glfwSetWindowPos(window, videoMode.width() / 2 - width / 2,
-                videoMode.height() / 2 - height / 2);
+
+        scaleWidth = videoMode.width() / width;
+        scaleHeight = videoMode.height() / height;
+
+        if(fullscreen == A2D.A2D_FULLSCREEN) {
+            window = GLFW.glfwCreateWindow((int) (width * scaleWidth),
+                    (int) (height * scaleHeight), title, GLFW.glfwGetPrimaryMonitor(), MemoryUtil.NULL);
+        }
+        if(fullscreen == A2D.A2D_WINDOWED) {
+            window = GLFW.glfwCreateWindow((int) (width * scale),
+                    (int) (height * scale), title, MemoryUtil.NULL, MemoryUtil.NULL);
+        }
+
+        if(centered == A2D.A2D_CENTERED) GLFW.glfwSetWindowPos(window, videoMode.width() / 2 - (int) (width * scale) / 2,
+                videoMode.height() / 2 - (int) (height * scale) / 2);
 
         if(vsync == A2D.A2D_TRUE) GLFW.glfwSwapInterval(1);
         else GLFW.glfwSwapInterval(0);
@@ -58,8 +78,12 @@ public class Window {
     public void initGL() {
         GL.createCapabilities();
 
-        GL11.glViewport(0, 0, width, height);
-        GL11.glOrtho(0, width, height, 0, -1, 1);
+        if(fullscreen == A2D.A2D_FULLSCREEN) {
+            GL11.glViewport(0, 0, (int) (width * scaleWidth), (int) (height * scaleHeight));
+        } else {
+            GL11.glViewport(0, 0, (int) (width * scale), (int) (height * scale));
+        }
+        GL11.glOrtho(0, width * scaleWidth, height * scaleHeight, 0, -1, 1);
         GL11.glMatrixMode(GL11.GL_PROJECTION);
         GL11.glLoadIdentity();
         GL11.glMatrixMode(GL11.GL_MODELVIEW);
@@ -83,19 +107,19 @@ public class Window {
         this.window = window;
     }
 
-    public int getWidth() {
+    public double getWidth() {
         return width;
     }
 
-    public void setWidth(int width) {
+    public void setWidth(double width) {
         this.width = width;
     }
 
-    public int getHeight() {
+    public double getHeight() {
         return height;
     }
 
-    public void setHeight(int height) {
+    public void setHeight(double height) {
         this.height = height;
     }
 
