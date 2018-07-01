@@ -14,7 +14,7 @@ public class Renderer {
         this.window = window;
     }
 
-    public void initRender() {
+    public void initRenderer() {
         GLFW.glfwSwapBuffers(window.getWindow());
     }
 

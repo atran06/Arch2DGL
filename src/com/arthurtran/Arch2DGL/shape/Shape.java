@@ -1,5 +1,7 @@
 package com.arthurtran.Arch2DGL.shape;
 
+import com.arthurtran.Arch2DGL.main.Point;
+
 public abstract class Shape {
 
     private float x;
@@ -7,17 +9,33 @@ public abstract class Shape {
     private float width;
     private float height;
 
+    private double angle;
+
     public Shape(float x, float y, float width, float height) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
+    }
 
+    public Shape(Point point, float width, float height) {
+        this.x = point.getX();
+        this.y = point.getY();
+        this.width = width;
+        this.height = height;
     }
 
     public abstract void draw();
-
     public abstract void fill();
+    public abstract void rotate(float deg);
+
+    public void setAngle(double angle) {
+        this.angle = angle;
+    }
+
+    public double getAngle() {
+        return angle;
+    }
 
     public float getX() {
         return x;

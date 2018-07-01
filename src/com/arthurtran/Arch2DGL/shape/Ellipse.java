@@ -39,4 +39,9 @@ public class Ellipse extends Shape {
 
         GL11.glEnd();
     }
+
+    @Override
+    public void rotate(float deg) {
+
+    }
 }
